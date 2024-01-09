@@ -1,0 +1,688 @@
+_CONSOLE
+_CRT_SECURE_NO_WARNINGS
+
+--------------------------------------------------------
+<template 형태의 코드>
+#include <iostream>
+#include<cstdlib>
+using namespace std;
+template <typename T>
+
+int main()
+{
+
+	return 0;
+}
+-----------------------------------------------------
+<카운트 증가,감소 코드>
+
+class Count 
+{
+	int n;
+public:
+	Count() { n = 0; }
+	void Increment() { n++; }
+	void Decrement() { n--; }
+	void Print()
+	{ 
+		std::cout<<"Value= "<<n<<endl;
+	}
+};
+
+int main()
+{
+	Count count;
+	count.Increment();
+	count.Print();
+	count.Decrement();
+	count.Print();
+
+	return 0;
+}
+
+-----------------------------------------------------
+<검색 알고리즘 헤더 파일>
+#pragma once
+#include <iostream>
+using namespace std;
+#define SEARCH_FAILED -1
+class SearchAlgorithm 
+{
+public:
+	void PrintLocation(int location)
+	{
+		if (location!= SEARCH_FAILED)
+		{
+			cout << "Location= " << location<< endl;
+		}
+		else cout << "Search failed" << endl;
+	}
+	virtual int Search(int a[], int key, int length) = 0;
+};
+-----------------------------------------------------
+<정렬 알고리즘 헤더 파일>
+#pragma once
+#include <iostream>
+using namespace std;
+#define SWAP(a,b){int c=a;a=b;b=c;}
+
+class SortAlgorithm
+{
+public:
+	void PrintSubArray(int a[], int low, int high)
+	{
+		for (int i = 0; i <= high; i++)
+		{
+			if (i < low) cout << "  ";
+			else cout << a[i] << " ";
+		}
+		cout << endl;
+	}
+	void PrintArray(int a[], int length)
+	{
+		PrintSubArray(a, 0, length - 1);
+	}
+	virtual void Sort(int a[], int length) = 0;
+};
+
+
+-----------------------------------------------------
+<자구_Student 헤더 파일>
+#pragma once
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+
+class Student
+{
+public:
+	int id, age, grade;
+	int score;
+	string name;
+	Student(int i = 0, string n = " ", int a = 0, int g = 0, int s= 0 ) 
+	{
+		id = i; name = n; age = a; grade = g; score = s;
+	}
+	void Print()
+	{
+		if (id <= 0) return;
+		cout << "ID=" << id << "; Name="
+			<< name << ";Age=" << age;
+		if (grade <= 0) cout << endl;
+		else cout << ";Grade=" << grade
+			<< ";Score=" << score << endl;
+	}
+	int Key() { return id; }
+};
+-----------------------------------------------------
+//스택(stack)
+#pragma once
+#include<iostream>
+#include<cstdlib>
+
+using namespace std;
+
+void Error(string s) { cerr << s; exit(-1); }
+
+const int STACK_SIZE = 100;
+
+template<typename Data>
+
+class StackTemplate
+{
+	Data data[STACK_SIZE];
+	int top;
+public:
+	StackTemplate() { top = -1; }
+	void Push(Data d)
+	{
+		if (IsFull())Error("Stack is full");
+		data[++top] = d;
+	}
+	Data Pop()
+	{
+		if (IsEmpty())Error("Stack is empty");
+		return data[top--];
+	}
+	Data Peek()
+	{
+		if (IsEmpty())Error("Stack is empty");
+		return data[top];
+	}
+	bool IsEmpty() { return top == -1; }
+	bool IsFull() { return top == STACK_SIZE - 1; }
+	void PrintStack()
+	{
+		for (int i = 0; i <= top; i++)
+		{
+			cout << data[i] << endl;
+		}
+		cout << endl;
+	}
+	int Length() { return top + 1; }
+};
+
+
+
+-----------------------------------------------------
+//큐(queue)
+
+#pragma once
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+
+void Error(string s) { cerr << s; exit(-1); }
+const int QUEUE_SIZE = 100;
+template<typename Data>
+
+class QueueTemplate
+{
+	//상속에 쓰위기위해서
+protected:
+	Data data[QUEUE_SIZE];
+	int front, rear, length;
+public:
+	//constructor
+	QueueTemplate () {
+	front = 0; rear = -1; length = 0; }
+	//get oldest element
+	Data Peek()
+	{
+		if (IsFull())Error("Queue is full"); 
+		return data[front];
+	}
+	//delete oldest element
+	Data Delete()
+	{
+		if (IsEmpty())Error("Queue is empty");
+		Data out = data[front];
+		front = (front + 1) % QUEUE_SIZE;
+		length--;
+		return out;
+	}
+	void Insert(Data d)
+	{
+		if (IsFull())Error("Queue is full");
+		rear = (rear + 1) % QUEUE_SIZE;
+		data[rear] = d; length++;
+	}
+	bool IsEmpty() { return length == 0; }
+	bool IsFull() { return length == QUEUE_SIZE;}
+};
+-----------------------------------------------------
+//데크(Deque)
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+
+void Error(string s) { cerr << s; exit(-1); }
+const int DEQUE_SIZE = 100;
+typedef int Data;
+
+class Deque
+{
+	Data data[DEQUE_SIZE];
+	int front, rear, length;
+public:
+	Deque() { front = 0; rear = DEQUE_SIZE - 1; length = 0; }
+	void PrintFrontRear() {
+		cout << "front= " << front << ";rear= " << rear << endl;
+	}
+	void InsertFront(Data d) {
+		if (IsFull()) Error("Deque is full"); length++;
+		front = (front - 1 + DEQUE_SIZE) % DEQUE_SIZE; data[front] = d;
+
+	}
+
+	void InsertRear(Data d) {
+		if (IsFull()) Error("Deque is full"); length++;
+		rear = (rear + 1) % DEQUE_SIZE; data[rear] = d;
+
+	}
+	Data DeleteFront() {
+		if (IsEmpty())Error("Deque is empty"); length--;
+		Data out = data[front]; front = (front + 1) % DEQUE_SIZE;
+		return out;
+	}
+	Data DeleteRear() {
+		if (IsEmpty())Error("Deque is empty"); length--;
+		Data out = data[rear]; rear = (rear - 1 + DEQUE_SIZE) % DEQUE_SIZE; return out;
+	}
+	bool IsEmpty() { return length == 0; }
+	bool IsFull() { return length == DEQUE_SIZE; }
+};
+-----------------------------------------------------
+//ArrayList-헤더파트
+#pragma once
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+void Error(string s) { cerr << s; exit(-1); }
+
+typedef int Data;
+const int LIST_SIZE = 10000;
+const int SEARCH_FAILED= -1000000;
+
+class ArrayList
+{
+protected:
+	Data data[LIST_SIZE];
+	int length;
+	virtual int Key(Data d) { return d; }
+public:
+	ArrayList() { length = 0;}
+	void InsertPos(int pos, Data d);
+	Data DeletePos(int pos);
+	Data PeekPos(int pos);
+	Data Search(int key);
+	void PrintList();
+	bool IsEmpty() { return length == 0; }
+	bool IsFull() { return length == LIST_SIZE; }
+	int Length() { return length; }
+};
+
+-----------------------------------------------------
+//ArrayList-cpp파트
+#include "ArrayList.h"
+
+void CheckPos(int pos, int maxPos)
+{
+
+	if (pos<0 || pos>maxPos)
+	{
+		Error("Illegal position ");
+	}
+}
+void ArrayList::InsertPos(int pos, Data d)
+{
+	CheckPos(pos, length);
+	if (IsFull())Error("List is Full");
+	for (int i = length; i > pos; i--)
+	{
+		data[i] = data[i - 1];
+	}
+	data[pos] = d; length++;
+}
+
+Data ArrayList::PeekPos(int pos)
+{
+	CheckPos(pos, length - 1);
+	return data[pos];
+}
+
+Data ArrayList::DeletePos(int pos)
+{
+	CheckPos(pos, length - 1);
+	Data d = data[pos];
+	for (int i = pos; i < length; i++)
+	{
+		data[i] = data[i + 1];
+	}
+	length--; return d;
+
+
+}
+-----------------------------------------------------
+//LinkedList- 헤더파트
+#pragma once
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+typedef int Data;
+const int SEARCH_FAILED = -1000000;
+
+class Node
+{
+	Data* data;
+	Node* next;
+	Node(Data d = 0, Node* n = NULL){data =d; next = n;}
+	friend class LinkedList;
+};
+
+class LinkedList
+{
+	Node* head;
+	int	length;
+	int Key(Data d) { return d; }
+public:
+	LinkedList() { head = NULL; length = 0; }
+	void InsertRear(Data d);
+	void PirntData(Data d);
+	void PrntList();
+
+};
+
+-----------------------------------------------------
+//LinkedList-cpp파트
+#include "LinkedList.h"
+void Error(string s) { cerr << s; exit(-1); }
+-----------------------------------------------------
+CMD에서 해당 프로세스 id 찾고 작업 종료시키기
+tasklist
+taskkill/f /pid 12444
+-----------------------------------------------------
+//힙(Heap) 헤더 파트
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+const int HEAP_SIZE = 10000;
+//Abstract class(with pure virtual function)
+template<typename Data>
+class HeapTempate
+{
+	Data data[HEAP_SIZE];
+	int length;
+	void InsertRear(Data d);
+	Data DeleteRear();
+	void Swap(int i, int j)
+	{
+		Data temp = data[i];
+		data[i] = data[j]; data[j] = temp;
+	}
+	virtual int Key(Data d) = 0;
+public:
+	HeapTempate() { length = 0; }
+	void Insert(Data d);
+	Data Delete();
+	Data Peek() { return data[1]; }
+	int Length() { return length; }
+	void PrintTree();
+	bool IsEmpty() { return length == 0; }
+	bool IsFull() { return length == HEAP_SIZE - 1; }
+};
+
+class MaxHeap : public HeapTempate<int>
+{
+	int Key(int d) { return d; }
+};
+
+class MinHeap : public HeapTempate<int>
+{
+	int Key(int d) { return -d; }
+};
+
+-----------------------------------------------------
+//cpp파일
+#include "Heap.h"
+void Error(string s) { cout << s; exit(-1); }
+
+template <class Data>
+void HeapTempate <Data> ::InsertRear(Data d)
+{
+	if (IsFull()) Error("Tree is full");
+	data[++length] = d;
+}
+
+template <class Data>
+void HeapTempate <Data> ::PrintTree()
+{
+	for (int i = 1; i <= length; i++)
+	{
+		cout << data[i] << " ";
+	}
+	cout << endl;
+}
+
+template <class Data>
+Data HeapTempate <Data> ::DeleteRear()
+{
+	if (IsEmpty()) Error("Tree is empty");
+	return data[length--];
+}
+
+
+template <class Data>
+void HeapTempate <Data> ::Insert(Data d)
+{
+	InsertRear(d);
+	int child = length, parent = child / 2;
+	while (child > 1) //until top
+	{
+		if(Key(data[parent])>= Key(data[child])) break;
+		Swap(child,parent);
+		child = parent;
+		parent = child / 2;
+	}
+}
+
+template <class Data>
+Data HeapTempate <Data> ::Delete()
+{
+	Swap(1, length);
+	Data result = DeleteRear(); //delete top
+	int parent = 1, child = parent * 2;
+	while (child <= length)
+	{
+		child += (child < length && Key(data[child]) < Key(data[child + 1]));
+		if (Key(data[parent]) >= Key(data[child])) break;
+		Swap(child, parent);
+		parent = child; child = parent * 2;
+	}
+	return result;
+}
+
+-----------------------------------------------------
+//Linkedlist로 표현한 binary tree
+#pragma once
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+typedef int Data;
+class Node 
+{
+public: 
+	Data data;
+	Node* left; Node* right;
+	Node(Data d = 0, Node* l = NULL, Node* r = NULL)
+	{
+	  data = d; left = l; right = r;
+	}
+	bool IsLeaf()
+	{
+	  return left == NULL && right == NULL;
+	}
+};
+
+class Binarytree
+{
+protected:
+	Node* root;
+	Node* InsertPos(Node* n, int path, Data d);
+	Data DeletePos(Node* n, int path);
+	Data PeekPos(Node* n, int path);
+	int NumNode(Node* n);
+	int NumLeaf(Node* n);
+	int Height(Node* n);
+	void PrintInorder(Node* n);
+	void PrintPreorder(Node* n);
+	void PrintPostorder(Node* n);
+public:
+	Binarytree() { root = NULL; }
+	void InsertPos(int Pos, Data d);
+	Data DeletePos(int Pos);
+	Data PeekPos(int Pos);
+	int NumNode() { return NumNode(root); }
+	int NumLeaf() { return NumLeaf(root); }
+	int Height() { return Height(root); }
+	void PrintIndorder()
+	{
+		PrintIndorder(root); cout << endl;
+	}
+	void PrintPredorder()
+	{
+		PrintPredorder(root); cout << endl;
+	}
+	void PrintPostdorder()
+	{
+		PrintPostdorder(root); cout << endl;
+	}
+	void PrintLeveldorder()
+};
+
+
+-----------------------------------------------------
+//그래프의 헤더파일 파트 Graph.h
+
+#pragma once
+#include <iostream>
+#include<cstdlib>
+using namespace std;
+#define GRAPH_SIZE 20
+const char NONE = '.'; //vertext가 없으면 . 으로 표시할 예정
+class Graph
+{
+protected:
+	char label[GRAPH_SIZE];
+	bool adjacent[GRAPH_SIZE][GRAPH_SIZE];
+	int degree[GRAPH_SIZE];
+	bool visited[GRAPH_SIZE];
+	int graphSize;
+	void CheckIndex(int n);
+	void VisitVertex(int n);
+	void DepthFirstSearchRecursion(int n);
+public:
+	Graph(); //생성자
+	void InsertVertex(int n, char c);
+	void InsertEdge(int n, int m);
+	void DeleteVertex(int n);
+	void DeleteEdge(int n,int m);
+	void PrintGraph();
+	void DepthFirstSearch(int n);
+	void BreadthFirstSearch(int n);
+	void ResetVisited(); //변수들 초기화 시키는 함수
+};
+
+
+-----------------------------------------------------
+//그래프의 cpp파트 Graph.cpp
+
+#include "Graph.h"
+#include "QueueTemplate.h"
+
+void Graph::CheckIndex(int n)
+{
+	//index n이 괜찮은지 체크
+	if (n < 0 || n >= GRAPH_SIZE)
+		Error("Illegal index");
+}
+void Graph::VisitVertex(int n)
+{
+	//방문한 꼭지점을 체크하고, 프린트한다
+	visited[n] = true;
+	cout << label[n] << " ";
+}
+
+Graph::Graph()
+{
+	//생성자 파트(그래프 클래스 객체변수 사용시 자동 불러오게됨)
+	//꼭지점(graphSize),간선개수(degree),연결 된것(adja),방문한것 전부 false로 초기화
+	graphSize = 0;
+	for (int i = 0; i < GRAPH_SIZE; i++)
+	{
+		label[i] = NONE;
+		degree[i] = 0;
+		visited[i] = false;
+		for (int j = 0; j < GRAPH_SIZE; j++)
+		{
+			adjacent[i][j] = false;
+		}
+	}
+}
+
+void Graph::InsertVertex(int n, char c)
+{
+	CheckIndex(n);
+	if (label[n] != NONE) Error("Occupied");
+	//label배열에 꼭지점 추가, 꼭지점 개수 증가(=graphSize)
+	label[n] = c; graphSize++;
+}
+
+void Graph::InsertEdge(int n,int m)
+{
+	CheckIndex(n); CheckIndex(m);
+	adjacent[n][m] = adjacent[m][n]=true;
+	degree[n]++; degree[m]++;
+}
+
+void Graph::PrintGraph()
+{
+	for (int n = 0; n < GRAPH_SIZE; n++)
+	{
+		if (label[n] == NONE) continue;
+		cout << "Vertex" << label[n]
+			<< "has neighbor";
+		for (int i = 0; i < GRAPH_SIZE; i++)
+		{
+			if (adjacent[n][i]) cout << label[i] << " ";
+		}
+		cout << endl;
+	}
+}
+
+
+void Graph::DeleteEdge(int n,int m)
+{
+	CheckIndex(n); CheckIndex(m);
+	adjacent[n][m] = adjacent[m][n] = false;
+	degree[n]--; degree[m]--;
+}
+
+void Graph::DeleteVertex(int n)
+{
+	CheckIndex(n);
+	if (label[n] == NONE)
+		Error("No vertex to delete");
+	for (int i = 0; i < GRAPH_SIZE; i++)
+	{
+		if (adjacent[n][i] || adjacent[i][n])
+		{
+			cout << "Delete edges first" << endl;
+			return;
+		}
+	}
+	label[n] = NONE; graphSize--;
+}
+
+void Graph::DepthFirstSearch(int n)
+{
+	ResetVisited();
+	DepthFirstSearchRecursion(n);
+}
+
+void Graph::DepthFirstSearchRecursion(int n)
+{
+	if (visited[n]) return; //if invaild skip
+	VisitVertex(n);
+	for (int i = 0; i < GRAPH_SIZE; i++)
+	{
+		if (adjacent[n][i])
+			DepthFirstSearchRecursion(i);
+	}//find unvisited neighbors and visit
+}
+void Graph::ResetVisited()
+{//변수 값 false로 초기화
+	for (int i = 0; i < GRAPH_SIZE; i++)
+	{
+		visited[i] = false;
+	}
+}
+void Graph::BreadthFirstSearch(int n)
+{
+	QueueTemplate <int> q;
+	ResetVisited();
+	
+	q.Insert(n);
+	while (q.IsEmpty() == false)
+	{
+		n = q.Delete();
+		if (visited[n]) continue;
+		VisitVertex(n);
+		for (int i = 0; i < GRAPH_SIZE; i++)
+		{
+			if (adjacent[n][i]) q.Insert(i);
+		}
+	}
+}
+
+-----------------------------------------------------
